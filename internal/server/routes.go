@@ -17,7 +17,7 @@ func (s *Server) setupRoutes() {
 	companyRepo := domain.NewCompanyRepository(s.db, s.Logger)
 
 	s.registerAuthRoutes(api, userRepo)
-	s.registerCompanyRoutes(api, companyRepo)
+	s.registerCompanyRoutes(api, companyRepo, userRepo)
 }
 
 func (s *Server) registerAuthRoutes(rg *gin.RouterGroup, userRepo domain.UserRepository) {
@@ -27,11 +27,16 @@ func (s *Server) registerAuthRoutes(rg *gin.RouterGroup, userRepo domain.UserRep
 	rg.POST("/login", authHandler.Login)
 }
 
-func (s *Server) registerCompanyRoutes(rg *gin.RouterGroup, companyRepo domain.CompanyRepository) {
+func (s *Server) registerCompanyRoutes(rg *gin.RouterGroup, companyRepo domain.CompanyRepository, userRepo domain.UserRepository) {
 	companyHandler := NewCompanyHandler(companyRepo, s.Logger)
 
-	rg.POST("/companies", companyHandler.CreateCompany)
-	rg.GET("/companies/:id", companyHandler.GetCompany)
-	rg.PATCH("/companies/:id", companyHandler.UpdateCompany)
-	rg.DELETE("/companies/:id", companyHandler.DeleteCompany)
+	companies := rg.Group("/companies")
+
+	companies.Use(s.AuthMiddleware(userRepo))
+	{
+		companies.POST("/", companyHandler.CreateCompany)
+		companies.GET("/:id", companyHandler.GetCompany)
+		companies.PATCH("/:id", companyHandler.UpdateCompany)
+		companies.DELETE("/:id", companyHandler.DeleteCompany)
+	}
 }

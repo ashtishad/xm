@@ -172,6 +172,10 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/server.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
         "409":
           description: Conflict
           schema:
@@ -201,6 +205,10 @@ paths:
           description: No Content
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "401":
+          description: Unauthorized
           schema:
             $ref: '#/definitions/server.ErrorResponse'
         "404":
@@ -233,6 +241,10 @@ paths:
             $ref: '#/definitions/domain.Company'
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "401":
+          description: Unauthorized
           schema:
             $ref: '#/definitions/server.ErrorResponse'
         "404":
@@ -271,6 +283,10 @@ paths:
             $ref: '#/definitions/domain.Company'
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "401":
+          description: Unauthorized
           schema:
             $ref: '#/definitions/server.ErrorResponse'
         "404":

@@ -28,7 +28,7 @@ Refer to **Makefile** for more details on local development commands.
 | User-Auth Endpoints (Login, Register)                                  |    ✅       |
 | Companies Endpoints (Create, Get One, Patch, Delete)                   |    ✅       |
 | Postgresql (raw-sql, db transactions, migrations)                      |    ✅       |
-| Authentication with JWT ES-256 and route protections                   |    ✅       |
+| Authentication with JWT ES-256 and route protections (authMiddleware)  |    ✅       |
 | Kafka Event production for mutating operations                         |    🔄       |
 | Dockerization of application                                           |    ✅       |
 | Docker setup for external services (postgres, kafka)                   |    ✅       |
