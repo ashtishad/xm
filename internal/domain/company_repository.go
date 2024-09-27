@@ -133,12 +133,12 @@ func (r *companyRepository) Update(ctx context.Context, id uuid.UUID, updates ma
 	setClause, args := buildUpdateQuery(updates)
 	args = append(args, id)
 
-	query := fmt.Sprintf(`
+	query := `
         UPDATE companies
-        SET %s
-        WHERE id = $%d
+        SET ` + setClause + `
+        WHERE id = $` + fmt.Sprintf("%d", len(args)) + `
         RETURNING id, name, description, amount_of_employees, registered, type, created_at, updated_at
-    `, setClause, len(args))
+    `
 
 	var company Company
 	var description sql.NullString
