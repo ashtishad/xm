@@ -7,7 +7,7 @@ import (
 
 func (s *Server) setupRoutes() {
 	s.router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	s.router.GET("/health", s.dbHealthHandler)
 
-	// api := s.router.Group("/api")
+	api := s.router.Group("/api")
+	api.GET("/health", s.dbHealthHandler)
 }
