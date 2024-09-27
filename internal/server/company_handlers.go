@@ -33,6 +33,7 @@ func NewCompanyHandler(companyRepo domain.CompanyRepository, logger *slog.Logger
 // @Failure 400 {object} ErrorResponse
 // @Failure 409 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
+// @Failure 401 {object} ErrorResponse
 // @Router /api/companies [post]
 func (h *CompanyHandler) CreateCompany(c *gin.Context) {
 	var req CreateCompanyRequest
@@ -71,6 +72,7 @@ func (h *CompanyHandler) CreateCompany(c *gin.Context) {
 // @Failure 400 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
+// @Failure 401 {object} ErrorResponse
 // @Router /api/companies/{id} [get]
 func (h *CompanyHandler) GetCompany(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
@@ -100,6 +102,7 @@ func (h *CompanyHandler) GetCompany(c *gin.Context) {
 // @Failure 400 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
+// @Failure 401 {object} ErrorResponse
 // @Router /api/companies/{id} [patch]
 func (h *CompanyHandler) UpdateCompany(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
@@ -156,6 +159,7 @@ func (h *CompanyHandler) UpdateCompany(c *gin.Context) {
 // @Failure 400 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
+// @Failure 401 {object} ErrorResponse
 // @Router /api/companies/{id} [delete]
 func (h *CompanyHandler) DeleteCompany(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
