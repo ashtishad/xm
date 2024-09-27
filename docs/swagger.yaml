@@ -1,0 +1,21 @@
+basePath: /api
+host: localhost:8080
+info:
+  contact: {}
+  title: XM API
+paths:
+  /health:
+    get:
+      description: Check the health of the database connection.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Check the health of the database connection.
+      tags:
+      - health
+swagger: "2.0"

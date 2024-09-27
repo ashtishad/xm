@@ -8,9 +8,13 @@ import (
 	"syscall"
 	"time"
 
+	_ "github.com/ashtishad/xm/docs"
 	"github.com/ashtishad/xm/internal/server"
 )
 
+// @title XM API
+// @host localhost:8080
+// @BasePath /api
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
