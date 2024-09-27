@@ -1,5 +1,24 @@
 basePath: /api
 definitions:
+  domain.Company:
+    properties:
+      amountOfEmployees:
+        type: integer
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      registered:
+        type: boolean
+      type:
+        type: string
+      updatedAt:
+        type: string
+    type: object
   domain.User:
     description: User stores personal information and account status. Passwords are
       stored as hashes for security.
@@ -28,6 +47,32 @@ definitions:
     - UserStatusActive
     - UserStatusInactive
     - UserStatusDeleted
+  server.CreateCompanyRequest:
+    properties:
+      amountOfEmployees:
+        minimum: 1
+        type: integer
+      description:
+        maxLength: 3000
+        type: string
+      name:
+        maxLength: 15
+        type: string
+      registered:
+        type: boolean
+      type:
+        enum:
+        - Corporations
+        - NonProfit
+        - Cooperative
+        - Sole Proprietorship
+        type: string
+    required:
+    - amountOfEmployees
+    - name
+    - registered
+    - type
+    type: object
   server.ErrorResponse:
     description: ErrorResponse provides a consistent error format.
     properties:
@@ -78,11 +123,167 @@ definitions:
       user:
         $ref: '#/definitions/domain.User'
     type: object
+  server.UpdateCompanyRequest:
+    properties:
+      amountOfEmployees:
+        minimum: 1
+        type: integer
+      description:
+        maxLength: 3000
+        type: string
+      name:
+        maxLength: 15
+        type: string
+      registered:
+        type: boolean
+      type:
+        enum:
+        - Corporations
+        - NonProfit
+        - Cooperative
+        - Sole Proprietorship
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
   title: XM API
 paths:
+  /api/companies:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new company with the provided details
+      parameters:
+      - description: Company creation details
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/server.CreateCompanyRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Company'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: Create a new company
+      tags:
+      - companies
+  /api/companies/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Soft deletes a company by setting its deleted_at timestamp
+      parameters:
+      - description: Company ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: Delete a company
+      tags:
+      - companies
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a company's details by its ID
+      parameters:
+      - description: Company ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Company'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: Get a company by ID(UUID)
+      tags:
+      - companies
+    patch:
+      consumes:
+      - application/json
+      description: Updates a company's details
+      parameters:
+      - description: Company ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Company update details
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/server.UpdateCompanyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Company'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/server.ErrorResponse'
+      summary: Update a company
+      tags:
+      - companies
   /api/login:
     post:
       consumes:
