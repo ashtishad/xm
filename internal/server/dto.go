@@ -39,3 +39,21 @@ type LoginRequest struct {
 type LoginResponse struct {
 	User domain.User `json:"user"`
 }
+
+// CreateCompanyRequest holds the data for creating a new company
+type CreateCompanyRequest struct {
+	Name              string  `json:"name" binding:"required,max=15"`
+	Description       *string `json:"description" binding:"omitempty,max=3000"`
+	AmountOfEmployees int     `json:"amountOfEmployees" binding:"required,min=1"`
+	Registered        bool    `json:"registered" binding:"required"`
+	Type              string  `json:"type" binding:"required,oneof=Corporations NonProfit Cooperative 'Sole Proprietorship'"`
+}
+
+// UpdateCompanyRequest holds the data for updating a company
+type UpdateCompanyRequest struct {
+	Name              *string `json:"name" binding:"omitempty,max=15"`
+	Description       *string `json:"description" binding:"omitempty,max=3000"`
+	AmountOfEmployees *int    `json:"amountOfEmployees" binding:"omitempty,min=1"`
+	Registered        *bool   `json:"registered" binding:"omitempty"`
+	Type              *string `json:"type" binding:"omitempty,oneof=Corporations NonProfit Cooperative 'Sole Proprietorship'"`
+}
