@@ -13,8 +13,9 @@ func (s *Server) setupRoutes() {
 	api := s.router.Group("/api")
 	api.GET("/health", s.dbHealthHandler)
 
+	eventRepo := domain.NewEventRepository(s.db, s.Logger)
 	userRepo := domain.NewUserRepository(s.db, s.Logger)
-	companyRepo := domain.NewCompanyRepository(s.db, s.Logger)
+	companyRepo := domain.NewCompanyRepository(s.db, s.Logger, eventRepo)
 
 	s.registerAuthRoutes(api, userRepo)
 	s.registerCompanyRoutes(api, companyRepo, userRepo)
