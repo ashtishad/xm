@@ -6,6 +6,8 @@ definitions:
         type: integer
       createdAt:
         type: string
+      deletedAt:
+        type: string
       description:
         type: string
       id:
@@ -149,7 +151,7 @@ info:
   contact: {}
   title: XM API
 paths:
-  /api/companies:
+  /companies:
     post:
       consumes:
       - application/json
@@ -187,7 +189,7 @@ paths:
       summary: Create a new company
       tags:
       - companies
-  /api/companies/{id}:
+  /companies/{id}:
     delete:
       consumes:
       - application/json
@@ -300,7 +302,21 @@ paths:
       summary: Update a company
       tags:
       - companies
-  /api/login:
+  /health:
+    get:
+      description: Check the health of the database connection.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Check the health of the database connection.
+      tags:
+      - health
+  /login:
     post:
       consumes:
       - application/json
@@ -337,7 +353,7 @@ paths:
       summary: Authenticate a user and provide access token
       tags:
       - auth
-  /api/register:
+  /register:
     post:
       consumes:
       - application/json
@@ -374,18 +390,4 @@ paths:
       summary: Register a new user
       tags:
       - auth
-  /health:
-    get:
-      description: Check the health of the database connection.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Check the health of the database connection.
-      tags:
-      - health
 swagger: "2.0"

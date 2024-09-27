@@ -42,7 +42,7 @@ func NewAuthHandler(userRepo domain.UserRepository, jwtManager *security.JWTMana
 // @Failure 400 {object} ErrorResponse
 // @Failure 409 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
-// @Router /api/register [post]
+// @Router /register [post]
 func (h *UserHandler) Register(c *gin.Context) {
 	var req RegisterUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -111,7 +111,7 @@ func (h *UserHandler) Register(c *gin.Context) {
 // @Failure 400 {object} ErrorResponse
 // @Failure 401 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
-// @Router /api/login [post]
+// @Router /login [post]
 func (h *UserHandler) Login(c *gin.Context) {
 	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {

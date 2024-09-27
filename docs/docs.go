@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/companies": {
+        "/companies": {
             "post": {
                 "description": "Creates a new company with the provided details",
                 "consumes": [
@@ -73,7 +73,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/companies/{id}": {
+        "/companies/{id}": {
             "get": {
                 "description": "Retrieves a company's details by its ID",
                 "consumes": [
@@ -243,7 +243,28 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/login": {
+        "/health": {
+            "get": {
+                "description": "Check the health of the database connection.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "Check the health of the database connection.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
             "post": {
                 "description": "Verifies password using bcrypt comparison.\nGenerates new JWT access token using ECDSA encryption.\nSets HTTP-only cookie with new access token.",
                 "consumes": [
@@ -295,7 +316,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/register": {
+        "/register": {
             "post": {
                 "description": "Hashes password using bcrypt before storage.\nGenerates JWT access token using ECDSA encryption.\nSets HTTP-only cookie with access token.",
                 "consumes": [
@@ -346,27 +367,6 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/health": {
-            "get": {
-                "description": "Check the health of the database connection.",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "health"
-                ],
-                "summary": "Check the health of the database connection.",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
@@ -377,6 +377,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
                     "type": "string"
                 },
                 "description": {
