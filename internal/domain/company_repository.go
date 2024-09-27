@@ -3,9 +3,11 @@ package domain
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log/slog"
 	"strings"
+	"time"
 
 	"github.com/ashtishad/xm/common"
 	"github.com/google/uuid"
@@ -21,15 +23,17 @@ type CompanyRepository interface {
 }
 
 type companyRepository struct {
-	db *sql.DB
-	l  *slog.Logger
+	db              *sql.DB
+	l               *slog.Logger
+	eventRepository EventRepository
 }
 
 // NewCompanyRepository creates a new instance of CompanyRepository.
-func NewCompanyRepository(db *sql.DB, logger *slog.Logger) CompanyRepository {
+func NewCompanyRepository(db *sql.DB, logger *slog.Logger, eventRepo EventRepository) CompanyRepository {
 	return &companyRepository{
-		db: db,
-		l:  logger,
+		db:              db,
+		l:               logger,
+		eventRepository: eventRepo,
 	}
 }
 
@@ -37,6 +41,7 @@ func NewCompanyRepository(db *sql.DB, logger *slog.Logger) CompanyRepository {
 // Performs a case-insensitive check for existing company names before insertion.
 // Handles potential race conditions by catching unique constraint violations.
 // Uses a serializable transaction to ensure data consistency.
+// Produces company_created event
 func (r *companyRepository) Create(ctx context.Context, company *Company) (*Company, common.AppError) {
 	tx, err := r.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
@@ -73,6 +78,10 @@ func (r *companyRepository) Create(ctx context.Context, company *Company) (*Comp
 
 		r.l.Error("failed to create company", "err", err)
 		return nil, common.NewInternalServerError(common.ErrUnexpectedDatabase, err)
+	}
+
+	if err := r.storeCompanyEvent(ctx, "company_created", company); err != nil {
+		r.l.Error("failed to store company_created event", "err", err)
 	}
 
 	if err = tx.Commit(); err != nil {
@@ -122,6 +131,7 @@ func (r *companyRepository) FindByID(ctx context.Context, id uuid.UUID) (*Compan
 
 // Update modifies an existing company record.
 // Uses a serializable transaction to ensure data consistency.
+// Produces company_updated event.
 func (r *companyRepository) Update(ctx context.Context, id uuid.UUID, updates map[string]any) (*Company, common.AppError) {
 	tx, err := r.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
@@ -159,6 +169,10 @@ func (r *companyRepository) Update(ctx context.Context, id uuid.UUID, updates ma
 		company.Description = &description.String
 	}
 
+	if err := r.storeCompanyEvent(ctx, "company_updated", &company); err != nil {
+		r.l.Error("failed to store company_updated event", "err", err)
+	}
+
 	if err = tx.Commit(); err != nil {
 		r.l.Error(common.ErrTxCommit, "err", err)
 		return nil, common.NewInternalServerError(common.ErrUnexpectedDatabase, err)
@@ -169,23 +183,54 @@ func (r *companyRepository) Update(ctx context.Context, id uuid.UUID, updates ma
 
 // Delete performs a soft delete on a company record by setting its deleted_at timestamp.
 // Returns NotFoundError if the company doesn't exist or is already deleted.
+// Produces company_deleted event.
 func (r *companyRepository) Delete(ctx context.Context, id uuid.UUID) common.AppError {
-	query := `UPDATE companies SET deleted_at = NOW() WHERE id = $1 AND deleted_at IS NULL`
-
-	result, err := r.db.ExecContext(ctx, query, id)
+	tx, err := r.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelSerializable})
 	if err != nil {
+		r.l.Error(common.ErrTXBegin, "err", err)
+		return common.NewInternalServerError(common.ErrUnexpectedDatabase, err)
+	}
+	defer r.rollBackOnError(tx)
+
+	query := `
+        UPDATE companies
+        SET deleted_at = NOW()
+        WHERE id = $1 AND deleted_at IS NULL
+        RETURNING id, name, description, amount_of_employees, registered, type, created_at, updated_at, deleted_at
+    `
+
+	var company Company
+	var description, deletedAt sql.NullString
+
+	err = tx.QueryRowContext(ctx, query, id).Scan(
+		&company.ID, &company.Name, &description, &company.AmountOfEmployees,
+		&company.Registered, &company.Type, &company.CreatedAt, &company.UpdatedAt, &deletedAt)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return common.NewNotFoundError("company not found or already deleted")
+		}
+
 		r.l.Error("failed to delete company", "err", err)
 		return common.NewInternalServerError(common.ErrUnexpectedDatabase, err)
 	}
 
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		r.l.Error("failed to get rows affected", "err", err)
-		return common.NewInternalServerError(common.ErrUnexpectedDatabase, err)
+	if description.Valid {
+		company.Description = &description.String
 	}
 
-	if rowsAffected == 0 {
-		return common.NewNotFoundError("company not found or already deleted")
+	if deletedAt.Valid {
+		parsedTime, _ := time.Parse(time.RFC3339, deletedAt.String)
+		company.DeletedAt = &parsedTime
+	}
+
+	if err := r.storeCompanyEvent(ctx, "company_deleted", &company); err != nil {
+		r.l.Error("Failed to store company_deleted event", "err", err)
+	}
+
+	if err = tx.Commit(); err != nil {
+		r.l.Error(common.ErrTxCommit, "err", err)
+		return common.NewInternalServerError(common.ErrUnexpectedDatabase, err)
 	}
 
 	return nil
@@ -210,6 +255,15 @@ func buildUpdateQuery(updates map[string]any) (string, []any) {
 	}
 
 	return strings.Join(setClauses, ", "), args
+}
+
+func (r *companyRepository) storeCompanyEvent(ctx context.Context, eventType string, company *Company) error {
+	eventData, err := json.Marshal(company)
+	if err != nil {
+		return fmt.Errorf("failed to marshal company data: %w", err)
+	}
+
+	return r.eventRepository.StoreEvent(ctx, eventType, eventData)
 }
 
 // rollBackOnError attempts to roll back a transaction if an error occurred.
