@@ -7,6 +7,110 @@
     "host": "localhost:8080",
     "basePath": "/api",
     "paths": {
+        "/api/login": {
+            "post": {
+                "description": "Verifies password using bcrypt comparison.\nGenerates new JWT access token using ECDSA encryption.\nSets HTTP-only cookie with new access token.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Authenticate a user and provide access token",
+                "parameters": [
+                    {
+                        "description": "User login credentials",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/server.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/server.LoginResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "description": "Hashes password using bcrypt before storage.\nGenerates JWT access token using ECDSA encryption.\nSets HTTP-only cookie with access token.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Register a new user",
+                "parameters": [
+                    {
+                        "description": "User registration details",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/server.RegisterUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/server.RegisterUserResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/health": {
             "get": {
                 "description": "Check the health of the database connection.",
@@ -25,6 +129,113 @@
                             "additionalProperties": true
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "domain.User": {
+            "description": "User stores personal information and account status. Passwords are stored as hashes for security.",
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/domain.UserStatus"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.UserStatus": {
+            "description": "UserStatus can be active, inactive, or deleted.",
+            "type": "string",
+            "enum": [
+                "active",
+                "inactive",
+                "deleted"
+            ],
+            "x-enum-varnames": [
+                "UserStatusActive",
+                "UserStatusInactive",
+                "UserStatusDeleted"
+            ]
+        },
+        "server.ErrorResponse": {
+            "description": "ErrorResponse provides a consistent error format.",
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "server.LoginRequest": {
+            "description": "LoginRequest validates input for user login. Email must be a valid email address. Password is required.",
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "server.LoginResponse": {
+            "description": "LoginResponse includes the authenticated user's details.",
+            "type": "object",
+            "properties": {
+                "user": {
+                    "$ref": "#/definitions/domain.User"
+                }
+            }
+        },
+        "server.RegisterUserRequest": {
+            "description": "RegisterUserRequest validates input for user registration. Name must be 5-100 characters long. Email must be a valid email address. Password must be at least 8 characters long.",
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 5
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 8
+                }
+            }
+        },
+        "server.RegisterUserResponse": {
+            "description": "RegisterUserResponse includes the created user's details.",
+            "type": "object",
+            "properties": {
+                "user": {
+                    "$ref": "#/definitions/domain.User"
                 }
             }
         }
