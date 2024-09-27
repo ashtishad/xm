@@ -6,6 +6,8 @@ definitions:
         type: integer
       createdAt:
         type: string
+      deletedAt:
+        type: string
       description:
         type: string
       id:
@@ -149,12 +151,17 @@ info:
   contact: {}
   title: XM API
 paths:
-  /api/companies:
+  /companies:
     post:
       consumes:
       - application/json
       description: Creates a new company with the provided details
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Company creation details
         in: body
         name: input
@@ -187,12 +194,17 @@ paths:
       summary: Create a new company
       tags:
       - companies
-  /api/companies/{id}:
+  /companies/{id}:
     delete:
       consumes:
       - application/json
       description: Soft deletes a company by setting its deleted_at timestamp
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Company ID
         in: path
         name: id
@@ -227,6 +239,11 @@ paths:
       - application/json
       description: Retrieves a company's details by its ID
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Company ID
         in: path
         name: id
@@ -263,6 +280,11 @@ paths:
       - application/json
       description: Updates a company's details
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Company ID
         in: path
         name: id
@@ -300,7 +322,21 @@ paths:
       summary: Update a company
       tags:
       - companies
-  /api/login:
+  /health:
+    get:
+      description: Check the health of the database connection.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Check the health of the database connection.
+      tags:
+      - health
+  /login:
     post:
       consumes:
       - application/json
@@ -337,7 +373,7 @@ paths:
       summary: Authenticate a user and provide access token
       tags:
       - auth
-  /api/register:
+  /register:
     post:
       consumes:
       - application/json
@@ -374,18 +410,4 @@ paths:
       summary: Register a new user
       tags:
       - auth
-  /health:
-    get:
-      description: Check the health of the database connection.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Check the health of the database connection.
-      tags:
-      - health
 swagger: "2.0"

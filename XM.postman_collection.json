@@ -1,0 +1,1376 @@
+{
+	"info": {
+		"_postman_id": "eb6f36c9-09cf-4f7d-bcb2-9854cf65318e",
+		"name": "XM",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37699266"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (pm.response.code === 200 || pm.response.code === 201) {",
+									"    var accessToken = pm.cookies.get('accessToken');",
+									"    if (accessToken) {",
+									"        pm.environment.set(\"accessToken\", accessToken);",
+									"        console.log(\"AccessToken set in environment variable: \" + accessToken);",
+									"    } else {",
+									"        console.warn(\"AccessToken cookie not found after login/register\");",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"John Doe\",\n    \"email\": \"someone@example.com\",\n    \"password\": \"samplepass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/register",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"register"
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": [
+						{
+							"name": "201-John",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"John Doe\",\n    \"email\": \"someone@example.com\",\n    \"password\": \"samplepass\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/register",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "accessToken=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3YTZlY2YxNy1lOGIwLTQ4YTAtYTI4NS1iYTNhYjZlNGU3MDgiLCJleHAiOjE3Mjc0NTc5MzYsIm5iZiI6MTcyNzQ1NjEzNiwiaWF0IjoxNzI3NDU2MTM2fQ.0tlBBoz7AHh9uE6PpOSDZG47ADnh8hBkhIAVeAaoYiM499baN3ibVgwvqPcHin5WWxmD7TKOHCtuapA3U4lRsg; Path=/; Max-Age=1800; HttpOnly; Secure"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Sep 2024 16:55:36 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "208"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"user\": {\n        \"userId\": \"7a6ecf17-e8b0-48a0-a285-ba3ab6e4e708\",\n        \"email\": \"someone@example.com\",\n        \"name\": \"John Doe\",\n        \"status\": \"active\",\n        \"createdAt\": \"2024-09-27T16:55:36.267459Z\",\n        \"updatedAt\": \"2024-09-27T16:55:36.267459Z\"\n    }\n}"
+						},
+						{
+							"name": "400",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"John Doe\",\n    \"email\": \"@example.com\",\n    \"password\": \"samplepass\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/register",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"register"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 18 Sep 2024 09:52:03 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "39"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Email must be a valid email\"\n}"
+						},
+						{
+							"name": "409",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"John Doe\",\n    \"email\": \"someone@example.com\",\n    \"password\": \"samplepass\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/register",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"register"
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 15 Sep 2024 06:25:00 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "47"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"user with this email already exists\"\n}"
+						},
+						{
+							"name": "500",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"John Doe\",\n    \"email\": \"someone@example.com\",\n    \"password\": \"samplepass\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/register",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"register"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Sep 2024 13:11:35 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "40"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"An unexpected error occurred\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (pm.response.code === 200 || pm.response.code === 201) {",
+									"    var accessToken = pm.cookies.get('accessToken');",
+									"    if (accessToken) {",
+									"        pm.environment.set(\"accessToken\", accessToken);",
+									"        console.log(\"AccessToken set in environment variable: \" + accessToken);",
+									"    } else {",
+									"        console.warn(\"AccessToken cookie not found after login/register\");",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"someone@example.com\",\n    \"password\": \"samplepass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/login",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"login"
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": [
+						{
+							"name": "200-John",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"email\": \"someone@example.com\",\n    \"password\": \"samplepass\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/login",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "accessToken=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3YTZlY2YxNy1lOGIwLTQ4YTAtYTI4NS1iYTNhYjZlNGU3MDgiLCJleHAiOjE3Mjc0NTc5ODYsIm5iZiI6MTcyNzQ1NjE4NiwiaWF0IjoxNzI3NDU2MTg2fQ.bunVF7Sp0bt9dJ8Oj9isZHRPpdIM-fEF_mo6Of3y3l-r0SPxonwIGsjQfoTRJxF8pD8GEtWyNgPMqcUyHu72-Q; Path=/; Max-Age=1800; HttpOnly; Secure"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Sep 2024 16:56:26 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "218"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"user\": {\n        \"userId\": \"7a6ecf17-e8b0-48a0-a285-ba3ab6e4e708\",\n        \"email\": \"someone@example.com\",\n        \"name\": \"John Doe\",\n        \"status\": \"active\",\n        \"createdAt\": \"2024-09-27T22:55:36.267459+06:00\",\n        \"updatedAt\": \"2024-09-27T22:55:36.267459+06:00\"\n    }\n}"
+						},
+						{
+							"name": "400",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"email\": \"@example.com\",\n    \"password\": \"wrongpass\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/login",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Sep 2024 13:12:24 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "39"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Email must be a valid email\"\n}"
+						},
+						{
+							"name": "404",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"email\": \"asxf@example.com\",\n    \"password\": \"samplepass\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/login",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Sep 2024 13:12:40 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "26"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"user not found\"\n}"
+						},
+						{
+							"name": "500",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"email\": \"ashef@example.com\",\n    \"password\": \"samplepass\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/login",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Sep 2024 13:13:12 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "40"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"An unexpected error occurred\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Company",
+			"item": [
+				{
+					"name": "Create a company",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    var companyId = jsonData.id;",
+									"    ",
+									"    // Set the company ID as a env variable",
+									"    pm.environment.set(\"companyId\", companyId);",
+									"    ",
+									"    console.log(\"Company ID set to collection variable: \" + companyId);",
+									"} else {",
+									"    console.log(\"Company creation failed. Status code: \" + pm.response.code);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"TechCorp\",\n  \"description\": \"Innovative technology solutions\",\n  \"amountOfEmployees\": 150,\n  \"registered\": true,\n  \"type\": \"Corporations\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/companies",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"companies"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "201",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Tesla\",\n  \"description\": \"Innovative technology solutions\",\n  \"amountOfEmployees\": 1500,\n  \"registered\": true,\n  \"type\": \"Corporations\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/companies",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Sep 2024 16:59:02 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "267"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"e3f7c0d3-ccb9-4ce4-926f-ffdbd7fdb687\",\n    \"name\": \"Tesla\",\n    \"description\": \"Innovative technology solutions\",\n    \"amountOfEmployees\": 1500,\n    \"registered\": true,\n    \"type\": \"Corporations\",\n    \"createdAt\": \"2024-09-27T22:59:02.406648+06:00\",\n    \"updatedAt\": \"2024-09-27T22:59:02.406648+06:00\"\n}"
+						},
+						{
+							"name": "409",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"tesla\",\n  \"description\": \"Innovative technology solutions\",\n  \"amountOfEmployees\": 150,\n  \"registered\": true,\n  \"type\": \"Corporations\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/companies",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies"
+									]
+								}
+							},
+							"status": "Conflict",
+							"code": 409,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Sep 2024 16:56:38 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "49"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"company with this name already exists\"\n}"
+						},
+						{
+							"name": "400",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"TechCorp\",\n  \"description\": \"Innovative technology solutions\",\n  \"amountOfEmployees\": 150,\n  \"registered\": true,\n  \"type\": \"Unknown\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/companies",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Sep 2024 13:15:00 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "90"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Type must be one of [Corporations NonProfit Cooperative 'Sole Proprietorship']\"\n}"
+						},
+						{
+							"name": "500",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"TechCorp\",\n  \"description\": \"Innovative technology solutions\",\n  \"amountOfEmployees\": 150,\n  \"registered\": true,\n  \"type\": \"Corporations\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/companies",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Sep 2024 13:15:17 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "40"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"An unexpected error occurred\"\n}"
+						},
+						{
+							"name": "401",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"TechCorp\",\n  \"description\": \"Innovative technology solutions\",\n  \"amountOfEmployees\": 150,\n  \"registered\": true,\n  \"type\": \"Corporations\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/companies",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Sep 2024 14:09:54 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "40"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Missing authorization header\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Company by ID(UUID)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/companies/{{companyId}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"companies",
+								"{{companyId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/companies/{{companyId}}",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies",
+										"{{companyId}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Sep 2024 16:59:19 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "267"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"e3f7c0d3-ccb9-4ce4-926f-ffdbd7fdb687\",\n    \"name\": \"Tesla\",\n    \"description\": \"Innovative technology solutions\",\n    \"amountOfEmployees\": 1500,\n    \"registered\": true,\n    \"type\": \"Corporations\",\n    \"createdAt\": \"2024-09-27T22:59:02.406648+06:00\",\n    \"updatedAt\": \"2024-09-27T22:59:02.406648+06:00\"\n}"
+						},
+						{
+							"name": "404",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/companies/{{$randomUUID}}",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies",
+										"{{$randomUUID}}"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Sep 2024 13:20:01 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "29"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"company not found\"\n}"
+						},
+						{
+							"name": "400",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/companies/{{{companyId}}",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies",
+										"{{{companyId}}"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Sep 2024 13:18:37 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "30"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Invalid company ID\"\n}"
+						},
+						{
+							"name": "500",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/companies/{{companyId}}",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies",
+										"{{companyId}}"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "401",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/companies/{{companyId}}",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies",
+										"{{companyId}}"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Sep 2024 14:10:11 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "40"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Missing authorization header\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update A Company",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"TechCorpUpdated\",\n  \"amountOfEmployees\": 200,\n  \"registered\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/companies/{{companyId}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"companies",
+								"{{companyId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"TechCorpUpdated\",\n  \"amountOfEmployees\": 1700\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/companies/{{companyId}}",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies",
+										"{{companyId}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Sep 2024 16:59:39 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "277"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"e3f7c0d3-ccb9-4ce4-926f-ffdbd7fdb687\",\n    \"name\": \"TechCorpUpdated\",\n    \"description\": \"Innovative technology solutions\",\n    \"amountOfEmployees\": 1700,\n    \"registered\": true,\n    \"type\": \"Corporations\",\n    \"createdAt\": \"2024-09-27T22:59:02.406648+06:00\",\n    \"updatedAt\": \"2024-09-27T22:59:39.871742+06:00\"\n}"
+						},
+						{
+							"name": "400",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"TechCorpUpdated\",\n  \"amountOfEmployees\": 200,\n  \"registered\": false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/companies/{id}",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies",
+										"{id}"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "404",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"TechCorpUpdated\",\n  \"amountOfEmployees\": 200,\n  \"registered\": false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/companies/{id}",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies",
+										"{id}"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "500",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"TechCorpUpdated\",\n  \"amountOfEmployees\": 200,\n  \"registered\": false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/companies/{id}",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies",
+										"{id}"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "401",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"TechCorpUpdated\",\n  \"amountOfEmployees\": 200,\n  \"registered\": false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api_url}}/companies/{id}",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies",
+										"{id}"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Sep 2024 14:10:24 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "40"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Missing authorization header\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete a company",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/companies/{{companyId}}",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"companies",
+								"{{companyId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "204",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/companies/{{companyId}}",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies",
+										"{{companyId}}"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "400",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/companies/{{$randomUUID}}",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies",
+										"{{$randomUUID}}"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Sep 2024 13:34:16 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "48"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"company not found or already deleted\"\n}"
+						},
+						{
+							"name": "500",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/companies/{id}",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies",
+										"{id}"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "404",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/companies/{id}",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies",
+										"{id}"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "401",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{api_url}}/companies/{id}",
+									"host": [
+										"{{api_url}}"
+									],
+									"path": [
+										"companies",
+										"{id}"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 27 Sep 2024 14:10:36 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "40"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"error\": \"Missing authorization header\"\n}"
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "companyId",
+			"value": ""
+		}
+	]
+}
