@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:16.4-alpine
+    container_name: xm_postgres
+    environment:
+      POSTGRES_DB: xm
+      POSTGRES_USER: ash
+      POSTGRES_PASSWORD: samplepass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./infra/docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ash"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - xm_network
+
+volumes:
+  pg_data:
+    name: xm_pg_data
+
+networks:
+  xm_network:
+    name: xm_network
+    driver: bridge
