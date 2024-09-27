@@ -35,3 +35,4 @@ Refer to **Makefile** for more details on local development commands.
 | Unit, Fuzz, Integration tests                                          | In Progress |
 | Linter(Golangci-Lint)                                                  |    ✅       |
 | Configuration (app.env), managed with viper                            |    ✅       |
+| Github Actions Workflow                                                |    ✅       |
