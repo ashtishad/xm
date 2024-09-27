@@ -1,0 +1,16 @@
+*
+
+!main.go
+!app.env
+!go.mod
+!go.sum
+!Dockerfile
+
+!common/
+
+!infra/
+infra/docker/
+
+!internal/
+!migrations/
+!docs/
