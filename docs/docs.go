@@ -30,6 +30,13 @@ const docTemplate = `{
                 "summary": "Create a new company",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "Company creation details",
                         "name": "input",
                         "in": "body",
@@ -89,6 +96,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Company ID",
                         "name": "id",
                         "in": "path",
@@ -143,6 +157,13 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Company ID",
                         "name": "id",
                         "in": "path",
@@ -192,6 +213,13 @@ const docTemplate = `{
                 ],
                 "summary": "Update a company",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Company ID",

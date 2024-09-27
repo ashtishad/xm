@@ -157,6 +157,11 @@ paths:
       - application/json
       description: Creates a new company with the provided details
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Company creation details
         in: body
         name: input
@@ -195,6 +200,11 @@ paths:
       - application/json
       description: Soft deletes a company by setting its deleted_at timestamp
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Company ID
         in: path
         name: id
@@ -229,6 +239,11 @@ paths:
       - application/json
       description: Retrieves a company's details by its ID
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Company ID
         in: path
         name: id
@@ -265,6 +280,11 @@ paths:
       - application/json
       description: Updates a company's details
       parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Company ID
         in: path
         name: id

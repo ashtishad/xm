@@ -28,6 +28,7 @@ func NewCompanyHandler(companyRepo domain.CompanyRepository, logger *slog.Logger
 // @Tags companies
 // @Accept json
 // @Produce json
+// @Param Authorization header string true "Bearer token"
 // @Param input body CreateCompanyRequest true "Company creation details"
 // @Success 201 {object} domain.Company
 // @Failure 400 {object} ErrorResponse
@@ -67,6 +68,7 @@ func (h *CompanyHandler) CreateCompany(c *gin.Context) {
 // @Tags companies
 // @Accept json
 // @Produce json
+// @Param Authorization header string true "Bearer token"
 // @Param id path string true "Company ID"
 // @Success 200 {object} domain.Company
 // @Failure 400 {object} ErrorResponse
@@ -96,6 +98,7 @@ func (h *CompanyHandler) GetCompany(c *gin.Context) {
 // @Tags companies
 // @Accept json
 // @Produce json
+// @Param Authorization header string true "Bearer token"
 // @Param id path string true "Company ID"
 // @Param input body UpdateCompanyRequest true "Company update details"
 // @Success 200 {object} domain.Company
@@ -154,6 +157,7 @@ func (h *CompanyHandler) UpdateCompany(c *gin.Context) {
 // @Tags companies
 // @Accept json
 // @Produce json
+// @Param Authorization header string true "Bearer token"
 // @Param id path string true "Company ID"
 // @Success 204 "No Content"
 // @Failure 400 {object} ErrorResponse
