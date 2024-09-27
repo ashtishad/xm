@@ -36,3 +36,8 @@ Refer to **Makefile** for more details on local development commands.
 | Linter(Golangci-Lint)                                                  |    ✅       |
 | Configuration (app.env), managed with viper                            |    ✅       |
 | Github Actions Workflow                                                |    ✅       |
+
+
+## Postman Workspace
+
+https://web.postman.co/workspace/3b0ac53d-a562-4470-9036-2537ea268429
