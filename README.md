@@ -26,13 +26,13 @@ Refer to **Makefile** for more details on local development commands.
 | Requirement                                                            | Status      |
 |------------------------------------------------------------------------|-------------|
 | User-Auth Endpoints (Login, Register)                                  |    ✅       |
-| Companies Endpoints                                                    |    🔄       |
+| Companies Endpoints (Create, Get One, Patch, Delete)                   |    ✅       |
 | Postgresql (raw-sql, db transactions, migrations)                      |    ✅       |
 | Authentication with JWT ES-256 and route protections                   |    ✅       |
 | Kafka Event production for mutating operations                         |    🔄       |
 | Dockerization of application                                           |    ✅       |
 | Docker setup for external services (postgres, kafka)                   |    ✅       |
-| Unit, Fuzz, Integration tests                                          |    🔄       |
+| Unit, Fuzz, Integration tests                                          |    ✅       |
 | Linter(Golangci-Lint)                                                  |    ✅       |
 | Configuration (app.env), managed with viper                            |    ✅       |
 | Github Actions Workflow                                                |    ✅       |
