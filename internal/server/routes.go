@@ -14,8 +14,10 @@ func (s *Server) setupRoutes() {
 	api.GET("/health", s.dbHealthHandler)
 
 	userRepo := domain.NewUserRepository(s.db, s.Logger)
+	companyRepo := domain.NewCompanyRepository(s.db, s.Logger)
 
 	s.registerAuthRoutes(api, userRepo)
+	s.registerCompanyRoutes(api, companyRepo)
 }
 
 func (s *Server) registerAuthRoutes(rg *gin.RouterGroup, userRepo domain.UserRepository) {
@@ -23,4 +25,13 @@ func (s *Server) registerAuthRoutes(rg *gin.RouterGroup, userRepo domain.UserRep
 
 	rg.POST("/register", authHandler.Register)
 	rg.POST("/login", authHandler.Login)
+}
+
+func (s *Server) registerCompanyRoutes(rg *gin.RouterGroup, companyRepo domain.CompanyRepository) {
+	companyHandler := NewCompanyHandler(companyRepo, s.Logger)
+
+	rg.POST("/companies", companyHandler.CreateCompany)
+	rg.GET("/companies/:id", companyHandler.GetCompany)
+	rg.PATCH("/companies/:id", companyHandler.UpdateCompany)
+	rg.DELETE("/companies/:id", companyHandler.DeleteCompany)
 }
