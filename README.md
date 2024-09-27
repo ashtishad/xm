@@ -51,6 +51,93 @@ Refer to **Makefile** for more details on local development commands.
 - [Air](https://github.com/cosmtrek/air): Live reloading.
 - [golangci-lint](https://golangci-lint.run/): Linting (config: .golangci.yaml)
 
+## Architecture and Request Flow:
+
+The project follows a clean, domain-driven design architecture, raw sql and unit testablity:
+
+```
+
+┌─────────┐    JSON    ┌───────────────┐   Domain   ┌─────────────┐
+│ Client  ├───────────►│   Handlers    ├───────────►│ Repositories│
+└─────────┘    (DTO)   └───────────────┘   Models   └─────────────┘
+                              │                           │
+                              │                           │
+                              │          Domain           │
+                              │          Models           │
+                              │                           │
+┌─────────┐    JSON    ┌───────────────┐   Domain   ┌─────────────┐
+│ Client   ◄───────────┤   Handlers     ◄───────────┤Repositories │
+└─────────┘    (DTO)   └───────────────┘   Models   └─────────────┘
+
+```
+Example: Create a Company
+
+company.go (model) -> company_repository.go (raw SQL DB operations) -> company_handlers.go (using DTOs)
+
+1. Domain Models: `internal/domain/*.go`
+2. Repositories: `internal/domain/*_repository.go`
+3. HTTP Handlers: `internal/server/*_handlers.go`
+4. DTOs: `internal/server/dto.go`
+
+## Directory Structure
+
+```
+.
+├── .github/workflows/
+│   └── ci.yaml              # GitHub Actions CI configuration
+├── common/
+│   ├── app_errs.go          # Structured error handling with AppError interface
+│   ├── config.go            # Configuration loading and management with viper
+│   ├── constants.go         # Global constants
+│   ├── custom_err_messages.go # Custom error messages
+│   ├── slog_config.go       # Structured logging configuration, custom handler options
+│   └── timeouts.go          # Timeout constants
+├── compose.yaml             # Docker Compose configuration
+├── go.mod                   # Go module dependencies
+├── go.sum                   # Go module checksum file
+├── infra/
+│   ├── docker/
+│   │   └── init-db.sql      # Initial database setup script
+│   └── postgres/
+│       ├── postgres_conn.go    # PostgreSQL connection with pgx, exposes *sql.DB handle
+│       ├── postgres_health.go  # Database health check
+│       └── postgres_migrations.go # Database migration runner with golang-migrate
+├── internal/
+│   ├── domain/
+│   │   ├── company.go            # Company domain model
+│   │   ├── company_repository.go # Company database interactions (raw sql, db transactions, store event)
+│   │   ├── event_repository.go   # Event logging repository
+│   │   ├── user.go               # User domain model
+│   │   └── user_repository.go    # User database interactions (raw sql, db transactions, store event)
+│   ├── security/
+│   │   ├── jwt.go              # JWT ES-256 access token generation and validation
+│   │   └── jwt_test.go         # JWT unit tests
+│   └── server/
+│       ├── company_handlers.go # Company-related HTTP handlers
+│       ├── dto.go              # Data Transfer Objects (Inout validation and Custom response)
+│       ├── helpers.go          # Helper functions for handlers
+│       ├── middlewares.go      # HTTP middleware functions (Cors config, Auth Middleware)
+│       ├── routes.go           # API route definitions
+│       ├── server.go           # Main server setup
+│       └── user_handlers.go    # User-related HTTP handlers
+└── migrations/
+    ├── 000001_create-users-table.up.sql    # User table creation
+    ├── 000001_create-users-table.down.sql  # User table removal
+    ├── 000002_create-companies-table.up.sql   # Company table creation
+    ├── 000002_create-companies-table.down.sql # Company table removal
+    ├── 000003_create-events-table.up.sql   # Events table creation
+    └── 000003_create-events-table.down.sql # Events table removal
+├── .dockerignore            # Specifies files to ignore in Docker builds
+├── .golangci.yaml           # Golangci-lint configuration
+├── Dockerfile               # Docker build instructions
+├── Makefile                 # Build automation and development commands
+├── README.md                # Project documentation
+├── XM.postman_collection.json # Postman API collection
+├── local-dev/
+│   └── app.env.example      # Example environment file for local development (Place it to the project root)
+├── app.env                  # Application environment variables
+├── main.go                  # Application entry point
+
 
 ## API Collection Documentation
 
@@ -61,7 +148,7 @@ Refer to **Makefile** for more details on local development commands.
    - `api_url`:
      If you run app with docker compose and make run: Base URL of the API (e.g., `127.0.0.1:8080/api`)
      If build the docker image, then run the app: Base URL of the API (e.g., `0.0.0.1:8080/api`)
-   - `accessToken`: Will be automatically set after login/register
+   - `accessToken`: Will be automatically set after login/register in the env
 
 Postman collection link: https://web.postman.co/workspace/3b0ac53d-a562-4470-9036-2537ea268429
 
