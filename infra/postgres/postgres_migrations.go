@@ -21,13 +21,11 @@ func RunMigrations(ctx context.Context, logger *slog.Logger, db *sql.DB) error {
 		"file://migrations",
 		"postgres", driver)
 	if err != nil {
-		logger.Warn("failed to create migrate instance", "error", err)
-		return nil
+		return fmt.Errorf("failed to create new migrate instance: %w", err)
 	}
 
 	if err = m.Up(); err != nil && err != migrate.ErrNoChange {
 		return fmt.Errorf("failed to run migrations: %w", err)
-
 	}
 
 	return nil
