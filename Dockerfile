@@ -18,6 +18,7 @@ USER ash
 WORKDIR /home/ash
 
 COPY --chown=ash:ash --from=builder /app/ .
+COPY --chown=ash:ash --from=builder /app/migrations ./migrations
 COPY --chown=ash:ash --from=builder /app/app.env .
 
 EXPOSE 8080
