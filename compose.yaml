@@ -13,10 +13,27 @@ services:
       - ./infra/docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ash"]
+      test: ["CMD-SHELL", "pg_isready -U ash -d xm"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - xm_network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: xm_app
+    environment:
+      DB_CONN_STRING: "postgres://ash:samplepass@postgres:5432/xm?sslmode=disable&timezone=UTC"
+      SERVER_ADDRESS: "0.0.0.0:8080"
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
     networks:
       - xm_network
 
