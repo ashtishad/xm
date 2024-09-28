@@ -70,7 +70,7 @@ jobs:
       run: go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 
     - name: Run migrations
-      run: migrate -database ${DB_CONN_STRING} -path db/migrations up
+      run: migrate -database ${DB_CONN_STRING} -path migrations up
       env:
         DB_CONN_STRING: postgres://ash:samplepass@localhost:5432/xm?sslmode=disable
 
