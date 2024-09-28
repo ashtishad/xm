@@ -12,13 +12,25 @@
    cp local-dev/app.env.example app.env
    ```
 
-3. Run `make up` to start the Docker services in the background.
-
-4. Run `make run` to start the application.
-
-5. (Or) Run `make watch` for live reload the application.
+3. Run `make up` or `docker compose up` to run the app. To stop them, use `make down` or `make down-data`
 
 Refer to **Makefile** for more details on local development commands.
+
+
+## Docker Compose Services
+
+The `compose.yaml` file defines two services:
+
+1. **postgres**: PostgreSQL database
+   - Image: postgres:16.4-alpine
+   - Port: 5432
+   - Environment variables for database name, user, and password
+
+2. **app**: Go application
+   - Built from the Dockerfile in the project root
+   - Environment variables for database connection and server address
+   - Port: 8080
+3. Both runs on `xm_network`
 
 
 ## Progress
